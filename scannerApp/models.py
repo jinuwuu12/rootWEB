@@ -4,3 +4,7 @@ from django.db import models
 class barcode_info(models.Model):
     barcode_num = models.IntegerField()
 
+
+class Barcode_img(models.Model):
+    image = models.BinaryField()
+    uploaded_at = models.DateTimeField(auto_now_add=True)

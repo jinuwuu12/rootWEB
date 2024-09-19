@@ -1,10 +1,11 @@
-from django.shortcuts import render
+from django.shortcuts import render , redirect
 from django.core.files.storage import FileSystemStorage
 from django.http import HttpResponse
 from pyzbar.pyzbar import decode
 from pyzbar import pyzbar
 import cv2
 import numpy as np
+from .models import Barcode_img, barcode_info
 
 # 바코드 스캔 함수
 
@@ -47,3 +48,14 @@ def upload_page_view(request):
     return render(request, 'upload.html')
     
 
+
+def upload_barcode(request):
+    if request.method == 'POST' and request.FILES['barcode_image']:
+        barcode_image = request.FILES['barcode_image']
+        
+        # 파일을 바이너리로 읽어서 데이터베이스에 저장
+        
+        image_data = barcode_image.read()  # 파일 내용을 바이너리로 읽음
+        barcode = Barcode_img.objects.create(image=image_data)
+        return redirect('upload_img/')  # 성공 후 리디렉션할 URL
+    return render(request, 'scan_result.html')
