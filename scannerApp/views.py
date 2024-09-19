@@ -8,6 +8,7 @@ import numpy as np
 
 # 바코드 스캔 함수
 
+barcode_lst = []
 def barcode_reading_view(request):
     if request.method == "POST" and request.FILES.get('barcode_image'):
         # 업로드된 파일 가져오기
@@ -25,7 +26,6 @@ def barcode_reading_view(request):
         # 바코드 디코딩 
         decoded = pyzbar.decode(gray)
         
-        barcode_lst = []
         for d in decoded:
             barcode_data = d.data.decode('utf-8')
             barcode_lst.append(barcode_data)
@@ -47,3 +47,5 @@ def upload_page_view(request):
     return render(request, 'upload.html')
     
 
+def debugging(request):
+    return render(request, 'debugging.html', {'barcode_lst': barcode_lst})
