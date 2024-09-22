@@ -1,5 +1,6 @@
 {
     "dataworkspace.excludedProjects": [
         "scanner_PJT/scanner_PJT.sqlproj"
-    ]
+    ],
+    "python.REPL.enableREPLSmartSend": false
 }

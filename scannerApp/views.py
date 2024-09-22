@@ -6,6 +6,7 @@ from pyzbar import pyzbar
 import cv2
 import numpy as np
 from .models import Barcode_img, barcode_info
+import mysql.connector
 
 # 바코드 스캔 함수
 
@@ -48,7 +49,7 @@ def upload_page_view(request):
     return render(request, 'upload.html')
     
 
-
+# 작업중 
 def upload_barcode(request):
     if request.method == 'POST' and request.FILES['barcode_image']:
         barcode_image = request.FILES['barcode_image']
@@ -57,5 +58,112 @@ def upload_barcode(request):
         
         image_data = barcode_image.read()  # 파일 내용을 바이너리로 읽음
         barcode = Barcode_img.objects.create(image=image_data)
-        return redirect('upload_img/')  # 성공 후 리디렉션할 URL
+        print(barcode)
+        return redirect('upload-barcode/')  # 성공 후 리디렉션할 URL
     return render(request, 'scan_result.html')
+
+
+# # 바코드 디코딩 함수(웹캠용)
+# def decode_barcode(frame):
+#     barcodes = pyzbar.decode(frame)
+#     for barcode in barcodes:
+#         x, y, w, h = barcode.rect
+#         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
+        
+#         barcode_data = barcode.data.decode("utf-8")
+#         barcode_type = barcode.type
+#         text = f"{barcode_data} ({barcode_type})"
+#         cv2.putText(frame, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
+
+
+# # 웹캡에서 바코드를 가져오는 함수
+# def scan_barcode_from_webcam():
+#     cap = cv2.VideoCapture(0)
+    
+#     while True:
+#         ret, frame = cap.read()
+        
+#         if not ret:
+#             print("프레임을 가져올 수 없습니다.")
+#             break  # 비디오를 더 이상 읽을 수 없으면 루프 종료
+        
+#         #바코드 디코딩 
+#         decode_barcode(frame)
+        
+#         # 화면에 결과 표시
+#         cv2.imshow("Barcode Scanner", frame)
+        
+#         # 'q' 키를 누르면 종료
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#             break
+    
+#     cap.release()
+#     cv2.destroyAllWindows()
+
+# # 웹캠 실행
+# scan_barcode_from_webcam()
+
+
+
+# mysql 데이터베이스 연결 설정 함수
+def connect_to_db():
+    return mysql.connector.connect(
+        host="127.0.0.1",  # MySQL 호스트 주소
+        user="root",  # MySQL 사용자명
+        password="jinwoo123@",  # MySQL 비밀번호
+        database="scanner_db"  # 사용할 데이터베이스
+        port=3307
+    )
+
+# 바코드 디코딩 함수(DB저장용)
+def decode_barcode(frame):
+    barcodes = pyzbar.decode(frame)
+    barcode_data_list = []
+    
+    for barcode in barcodes:
+        barcode_data = barcode.data.decode("utf-8")
+        barcode_type = barcode.type
+        print(f"Found {barcode_type} barcode: {barcode_data}")
+        
+        barcode_data_list.append((barcode_data, barcode_type))
+    
+    return barcode_data_list
+
+# 바코드를 MySQL에 저장하는 함수
+def save_barcodes_to_db(barcode_data_list):
+    db = connect_to_db()
+    cursor = db.cursor()
+    
+    for data in barcode_data_list:
+        cursor.execute("INSERT INTO barcodes (barcode_data, barcode_type) VALUES (%s, %s)", data)
+    
+    db.commit()
+    cursor.close()
+    db.close()
+
+# 카메라에서 실시간으로 바코드를 인식하고 MySQL에 저장
+
+def scan_and_save_barcodes():
+    cap = cv2.VideoCapture(0)
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+
+        barcode_data_list = decode_barcode(frame)
+        
+        # 바코드가 있으면 MySQL에 저장
+        if barcode_data_list:
+            save_barcodes_to_db(barcode_data_list)
+        
+        cv2.imshow("Barcode Scanner", frame)
+
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+# 실행
+scan_and_save_barcodes()
