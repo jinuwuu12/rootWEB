@@ -55,7 +55,7 @@ def connect_to_db():
         host="127.0.0.1",  # MySQL 호스트 주소
         user="root",  # MySQL 사용자명
         password="jinwoo123@",  # MySQL 비밀번호
-        database="scanner_db"  # 사용할 데이터베이스
+        database="scanner_db",  # 사용할 데이터베이스
         port=3307
     )
 
@@ -79,35 +79,35 @@ def save_barcodes_to_db(barcode_data_list):
     cursor = db.cursor()
     
     for data in barcode_data_list:
-        cursor.execute("INSERT INTO barcodes (barcode_data, barcode_type) VALUES (%s, %s)", data)
+        cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_structr, barcode_num) VALUES (%s, %s)", data)
     
     db.commit()
     cursor.close()
     db.close()
 
-# 카메라에서 실시간으로 바코드를 인식하고 MySQL에 저장
+#카메라에서 실시간으로 바코드를 인식하고 MySQL에 저장
 
 def scan_and_save_barcodes():
     cap = cv2.VideoCapture(0)
-    
-    while True:
-        ret, frame = cap.read()
-        if not ret:
-            break
+    try:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
 
-        barcode_data_list = decode_barcode(frame)
-        
-        # 바코드가 있으면 MySQL에 저장
-        if barcode_data_list:
-            save_barcodes_to_db(barcode_data_list)
-        
-        cv2.imshow("Barcode Scanner", frame)
+            barcode_data_list = decode_barcode(frame)
+            
+            # 바코드가 있으면 MySQL에 저장
+            if barcode_data_list:
+                save_barcodes_to_db(barcode_data_list)
+                
+            cv2.imshow("Barcode Scanner", frame)
 
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-            break
-
-    cap.release()
-    cv2.destroyAllWindows()
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
 
 # 실행
 scan_and_save_barcodes()
