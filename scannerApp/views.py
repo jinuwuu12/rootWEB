@@ -84,6 +84,24 @@ def save_barcodes_to_db(barcode_data_list):
     db.commit()
     cursor.close()
     db.close()
+    
+    
+# DB에 바코드 정보가 있는지 확인하는 함수
+def is_barcode_exists(barcode):
+    db = connect_to_db()
+    cursor = db.cursor()
+    query = "SELECT COUNT(*) FROM barcodes WHERE barcode = %s"
+    cursor.execute(query, (barcode,))
+    count = cursor.fetchone()[0]
+    return count > 0
+
+# DB안에 바코드 정보가 있는 경우 
+def if_there_are_barcode_in_db(barcode_data_list):
+    for barcode in barcode_data_list:
+        # 데이터베이스에 바코드가 이미 존재하는지 확인
+        if not is_barcode_exists(barcode):
+            save_barcodes_to_db(barcode)
+    
 
 #카메라에서 실시간으로 바코드를 인식하고 MySQL에 저장
 
@@ -111,3 +129,28 @@ def scan_and_save_barcodes():
 
 # 실행
 scan_and_save_barcodes()
+
+
+def scan_and_save_barcodes_test():
+    cap = cv2.VideoCapture(0)
+    try:
+        while True:
+            ret, frame = cap.read()
+            if not ret:
+                break
+
+            barcode_data_list = decode_barcode(frame)
+            
+            # 바코드가 있으면 MySQL에 저장
+            if is_barcode_exists(frame) == False:
+                save_barcodes_to_db(barcode_data_list)
+                
+            cv2.imshow("Barcode Scanner", frame)
+
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+    finally:
+        cap.release()
+        cv2.destroyAllWindows()
+        
+scan_and_save_barcodes_test()
