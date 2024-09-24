@@ -49,62 +49,6 @@ def upload_page_view(request):
     return render(request, 'upload.html')
     
 
-# 작업중 
-def upload_barcode(request):
-    if request.method == 'POST' and request.FILES['barcode_image']:
-        barcode_image = request.FILES['barcode_image']
-        
-        # 파일을 바이너리로 읽어서 데이터베이스에 저장
-        
-        image_data = barcode_image.read()  # 파일 내용을 바이너리로 읽음
-        barcode = Barcode_img.objects.create(image=image_data)
-        print(barcode)
-        return redirect('upload-barcode/')  # 성공 후 리디렉션할 URL
-    return render(request, 'scan_result.html')
-
-
-# # 바코드 디코딩 함수(웹캠용)
-# def decode_barcode(frame):
-#     barcodes = pyzbar.decode(frame)
-#     for barcode in barcodes:
-#         x, y, w, h = barcode.rect
-#         cv2.rectangle(frame, (x, y), (x + w, y + h), (0, 255, 0), 2)
-        
-#         barcode_data = barcode.data.decode("utf-8")
-#         barcode_type = barcode.type
-#         text = f"{barcode_data} ({barcode_type})"
-#         cv2.putText(frame, text, (x, y - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 2)
-
-
-# # 웹캡에서 바코드를 가져오는 함수
-# def scan_barcode_from_webcam():
-#     cap = cv2.VideoCapture(0)
-    
-#     while True:
-#         ret, frame = cap.read()
-        
-#         if not ret:
-#             print("프레임을 가져올 수 없습니다.")
-#             break  # 비디오를 더 이상 읽을 수 없으면 루프 종료
-        
-#         #바코드 디코딩 
-#         decode_barcode(frame)
-        
-#         # 화면에 결과 표시
-#         cv2.imshow("Barcode Scanner", frame)
-        
-#         # 'q' 키를 누르면 종료
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#             break
-    
-#     cap.release()
-#     cv2.destroyAllWindows()
-
-# # 웹캠 실행
-# scan_barcode_from_webcam()
-
-
-
 # mysql 데이터베이스 연결 설정 함수
 def connect_to_db():
     return mysql.connector.connect(
