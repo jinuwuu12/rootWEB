@@ -5,8 +5,6 @@ class barcode_info(models.Model):
     barcode_structr = models.CharField(max_length=100, default="EAN-13")
     barcode_num = models.CharField(max_length=100, default="0000000000000")
     
-
-
 class Barcode_img(models.Model):
     image = models.BinaryField()
     uploaded_at = models.DateTimeField(auto_now_add=True)

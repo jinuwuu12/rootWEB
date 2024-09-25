@@ -114,6 +114,7 @@ def if_there_are_barcode_in_db(barcode_data_list):
 
 def scan_and_save_barcodes():
     cap = cv2.VideoCapture(0)
+    recognized_barcodes = set() # 중복 방지 셋 생성
     try:
         while True:
             ret, frame = cap.read()
@@ -124,8 +125,13 @@ def scan_and_save_barcodes():
             # 바코드가 있으면 MySQL에 저장
             barcode_data_list = decode_barcode(frame)
             if barcode_data_list:
-                save_barcodes_to_db(barcode_data_list)
-                
+                for barcode_data in barcode_data_list :
+                    if barcode_data not in recognized_barcodes :
+                        save_barcodes_to_db([barcode_data])
+                        recognized_barcodes.add(barcode_data) #중복방지 셋에 저장
+                        cap.release()
+                        cv2.destroyAllWindows()
+                        return
             cv2.imshow("Barcode Scanner", frame)
             #if ret == True:
                 #break
@@ -168,23 +174,23 @@ scan_and_save_barcodes_test()
 
 
 # 타입테스트를 위한 코드
-cap2 = cv2.VideoCapture(0)
-try:
-    while True:
-        ret2, frame2 = cap2.read()
-        print(frame2)
+# cap2 = cv2.VideoCapture(0)
+# try:
+#     while True:
+#         ret2, frame2 = cap2.read()
+#         print(frame2)
         
-        if not ret2:
-            break
+#         if not ret2:
+#             break
         
-        if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
+#         if cv2.waitKey(1) & 0xFF == ord('q'):
+#                 break
             
-        cv2.imshow("Barcode Scanner", frame2)
+#         cv2.imshow("Barcode Scanner", frame2)
         
-finally:
-    print(type(frame2))
-    cap2.release()
-    cv2.destroyAllWindows()
+# finally:
+#     print(type(frame2))
+#     cap2.release()
+#     cv2.destroyAllWindows()
 ########################################################################################################################      
 
