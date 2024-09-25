@@ -76,9 +76,13 @@ WSGI_APPLICATION = "rootWEB.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  # MySQL을 사용한다는 의미
+        'NAME': 'scanner_db',                  # 사용할 데이터베이스 이름
+        'USER': 'root',                     # 데이터베이스 사용자
+        'PASSWORD': 'jinwoo123@',              # 데이터베이스 사용자 비밀번호
+        'HOST': '127.0.0.1',                   # 로컬에서 실행 중이면 localhost
+        'PORT': '3307',                        # MySQL 기본 포트
     }
 }
 
