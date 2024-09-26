@@ -12,7 +12,15 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from config import config
 
+# Config값
+host = config.host
+user = config.user
+password = config.password
+name = config.database
+port = config.port
+#
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -78,11 +86,11 @@ WSGI_APPLICATION = "rootWEB.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # MySQL을 사용한다는 의미
-        'NAME': 'scanner_db',                  # 사용할 데이터베이스 이름
-        'USER': 'root',                     # 데이터베이스 사용자
-        'PASSWORD': 'jinwoo123@',              # 데이터베이스 사용자 비밀번호
-        'HOST': '127.0.0.1',                   # 로컬에서 실행 중이면 localhost
-        'PORT': '3307',                        # MySQL 기본 포트
+        'NAME': name,                  # 사용할 데이터베이스 이름
+        'USER': user,                     # 데이터베이스 사용자
+        'PASSWORD': password,              # 데이터베이스 사용자 비밀번호
+        'HOST': host,                   # 로컬에서 실행 중이면 localhost
+        'PORT': port,                        # MySQL 기본 포트
     }
 }
 

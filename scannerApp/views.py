@@ -7,7 +7,15 @@ import cv2
 import numpy as np
 from .models import Barcode_img, barcode_info
 import mysql.connector
+from config import config
 
+# Config 값
+host     = config.host
+user     = config.user
+password = config.password
+database = config.database
+port     = config.port
+#
 # 바코드 스캔 함수
 
 barcode_lst = []
@@ -51,11 +59,11 @@ def upload_page_view(request):
 # mysql 데이터베이스 연결 설정 함수
 def connect_to_db():
     return mysql.connector.connect(
-        host="127.0.0.1",  # MySQL 호스트 주소
-        user="root",  # MySQL 사용자명
-        password="jinwoo123@",  # MySQL 비밀번호
-        database="scanner_db",  # 사용할 데이터베이스
-        port=3307
+        host=host,  # MySQL 호스트 주소
+        user=user,  # MySQL 사용자명
+        password=password,  # MySQL 비밀번호
+        database=database,  # 사용할 데이터베이스
+        port=port
     )
 
 # 바코드 디코딩 함수(DB저장용)
@@ -84,7 +92,13 @@ def save_barcodes_to_db(barcode_data_list):
         
         # 튜플인지 확인하고 길이가 2인 경우만 처리
         if isinstance(data, tuple) and len(data) == 2:
-            cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_structr, barcode_num) VALUES (%s, %s)", (data[0], data[1]))
+            cursor.execute("SELECT COUNT(*) FROM scannerapp_barcode_info WHERE barcode_structr = %s AND barcode_num = %s", (data[0], data[1]))
+            cnt = cursor.fetchone()[0]
+
+            if cnt == 0 :
+                cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_structr, barcode_num) VALUES (%s, %s)", (data[0], data[1]))
+            else :
+                print("나중에 바코드 중복될 때 사용할 부분")
         else:
             print(f"Invalid data format: {data}")
     
