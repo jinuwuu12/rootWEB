@@ -8,7 +8,7 @@ import numpy as np
 from .models import Barcode_img, barcode_info
 import mysql.connector
 
-# 바코드 스캔 함수
+# 이미지에서 바코드를 스캔하는 함수 - 이미지를 업로드했을 때 상품을 등록하기 위한 코드
 
 def barcode_reading_view(request):
     if request.method == "POST" and request.FILES.get('barcode_image'):
@@ -130,27 +130,3 @@ def scan_and_save_barcodes():
 # 실행
 scan_and_save_barcodes()
 
-
-def scan_and_save_barcodes_test():
-    cap = cv2.VideoCapture(0)
-    try:
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            barcode_data_list = decode_barcode(frame)
-            
-            # 바코드가 있으면 MySQL에 저장
-            if is_barcode_exists(frame) == False:
-                save_barcodes_to_db(barcode_data_list)
-                
-            cv2.imshow("Barcode Scanner", frame)
-
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-    finally:
-        cap.release()
-        cv2.destroyAllWindows()
-        
-scan_and_save_barcodes_test()
