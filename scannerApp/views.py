@@ -8,7 +8,7 @@ import numpy as np
 from .models import Barcode_img, barcode_info
 import mysql.connector
 
-# 바코드 스캔 함수
+# 이미지에서 바코드를 스캔하는 함수 - 이미지를 업로드했을 때 상품을 등록하기 위한 코드
 
 barcode_lst = []
 def barcode_reading_view(request):
@@ -144,6 +144,7 @@ def scan_and_save_barcodes():
 
 scan_and_save_barcodes()
 
+<<<<<<< HEAD
 
 
 ########################################################################################################################
@@ -194,3 +195,5 @@ scan_and_save_barcodes_test()
 #     cv2.destroyAllWindows()
 ########################################################################################################################      
 
+=======
+>>>>>>> 970d5297273e932a25100d80192794ae301bb276
