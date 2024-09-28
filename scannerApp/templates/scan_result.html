@@ -3,15 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Bootstrap</title>
 </head>
 <body>
     <h2>Barcode Scan Results:</h2>
-<ul>
-  {% for barcode_data in barcode_lst %}
-    <li>{{ barcode_data }}</li>
-  {% endfor %}
-</ul>
+    <ul>
+      {% for barcode_data in barcode_lst %}
+        <li>{{ barcode_data }}</li>
+      {% endfor %}
+    </ul> 
 
+    <form method="POST" action="/debugging/" enctype="multipart/form-data">
+      {% csrf_token %}
+      <button type="submit">go to Debugginging</button>
+    </form>
 </body>
+
 </html>
