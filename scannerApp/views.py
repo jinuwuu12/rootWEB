@@ -10,7 +10,6 @@ import mysql.connector
 
 # 이미지에서 바코드를 스캔하는 함수 - 이미지를 업로드했을 때 상품을 등록하기 위한 코드
 
-barcode_lst = []
 def barcode_reading_view(request):
     if request.method == "POST" and request.FILES.get('barcode_image'):
         # 업로드된 파일 가져오기
@@ -28,6 +27,7 @@ def barcode_reading_view(request):
         # 바코드 디코딩 
         decoded = pyzbar.decode(gray)
         
+        barcode_lst = []
         for d in decoded:
             barcode_data = d.data.decode('utf-8')
             barcode_lst.append(barcode_data)
@@ -47,6 +47,7 @@ def barcode_reading_view(request):
 
 def upload_page_view(request):
     return render(request, 'upload.html')
+    
 
 # mysql 데이터베이스 연결 설정 함수
 def connect_to_db():
@@ -78,15 +79,7 @@ def save_barcodes_to_db(barcode_data_list):
     cursor = db.cursor()
     
     for data in barcode_data_list:
-        # 데이터가 ndarray인지 확인하고, 튜플로 변환
-        if isinstance(data, np.ndarray):
-            data = tuple(data)  # ndarray를 튜플로 변환
-        
-        # 튜플인지 확인하고 길이가 2인 경우만 처리
-        if isinstance(data, tuple) and len(data) == 2:
-            cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_structr, barcode_num) VALUES (%s, %s)", (data[0], data[1]))
-        else:
-            print(f"Invalid data format: {data}")
+        cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_structr, barcode_num) VALUES (%s, %s)", data)
     
     db.commit()
     cursor.close()
@@ -114,53 +107,16 @@ def if_there_are_barcode_in_db(barcode_data_list):
 
 def scan_and_save_barcodes():
     cap = cv2.VideoCapture(0)
-    recognized_barcodes = set() # 중복 방지 셋 생성
     try:
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
 
+            barcode_data_list = decode_barcode(frame)
             
             # 바코드가 있으면 MySQL에 저장
-            barcode_data_list = decode_barcode(frame)
             if barcode_data_list:
-                for barcode_data in barcode_data_list :
-                    if barcode_data not in recognized_barcodes :
-                        save_barcodes_to_db([barcode_data])
-                        recognized_barcodes.add(barcode_data) #중복방지 셋에 저장
-                        cap.release()
-                        cv2.destroyAllWindows()
-                        return
-            cv2.imshow("Barcode Scanner", frame)
-            #if ret == True:
-                #break
-            if cv2.waitKey(1) & 0xFF == ord('q'):
-                break
-    finally:
-        cap.release()
-        cv2.destroyAllWindows()
-
-
-scan_and_save_barcodes()
-
-<<<<<<< HEAD
-
-
-########################################################################################################################
-# 위함수에 대한 테스트 코드
-def scan_and_save_barcodes_test():
-    cap = cv2.VideoCapture(0)
-    try:
-        while True:
-            ret, frame = cap.read()
-            if not ret:
-                break
-
-            barcode_data_list = decode_barcode(frame)
-            
-            # 바코드가 있으면 MySQL에 저장
-            if is_barcode_exists(frame) > 0:
                 save_barcodes_to_db(barcode_data_list)
                 
             cv2.imshow("Barcode Scanner", frame)
@@ -170,30 +126,7 @@ def scan_and_save_barcodes_test():
     finally:
         cap.release()
         cv2.destroyAllWindows()
-        
-scan_and_save_barcodes_test()
 
+# 실행
+scan_and_save_barcodes()
 
-# 타입테스트를 위한 코드
-# cap2 = cv2.VideoCapture(0)
-# try:
-#     while True:
-#         ret2, frame2 = cap2.read()
-#         print(frame2)
-        
-#         if not ret2:
-#             break
-        
-#         if cv2.waitKey(1) & 0xFF == ord('q'):
-#                 break
-            
-#         cv2.imshow("Barcode Scanner", frame2)
-        
-# finally:
-#     print(type(frame2))
-#     cap2.release()
-#     cv2.destroyAllWindows()
-########################################################################################################################      
-
-=======
->>>>>>> 970d5297273e932a25100d80192794ae301bb276
