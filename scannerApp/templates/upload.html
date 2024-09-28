@@ -8,7 +8,7 @@
     <title>Document</title>
 </head>
 <body>
-    <form method="POST" action="/scan_result/" enctype="multipart/form-data">
+    <form method="POST" action="{% url 'scan_result' %}" enctype="multipart/form-data">
         {% csrf_token %}
         <input type="file" name="barcode_image">
         <button type="submit">Upload</button>

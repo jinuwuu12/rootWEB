@@ -46,7 +46,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "scannerApp"
+    "scannerApp",
+    'inventoryflowApp',
+    'inventorycheckApp',
 ]
 
 MIDDLEWARE = [
@@ -64,7 +66,7 @@ ROOT_URLCONF = "rootWEB.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'templates')],
+        "DIRS": [os.path.join(BASE_DIR, 'rootWEB','templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
