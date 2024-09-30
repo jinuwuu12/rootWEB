@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>inventoryflow </title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 960px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .button {
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+            width: 48%;
+        }
+
+        .button:hover {
+            background-color: #0056b3;
+        }
+
+        .button:active {
+            background-color: #003f7f;
+        }
+
+        .table-container {
+            margin-top: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Warehouse Management</h1>
+    
+    <div class="button-group">
+        <!-- 입고 버튼 -->
+        <a href="#" class="button">입고 처리</a>
+        
+        <!-- 출고 버튼 -->
+        <a href="#" class="button">출고 처리</a>
+    </div>
+
+    <div class="table-container">
+        <h2>재고 현황</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>상품 ID</th>
+                    <th>상품명</th>
+                    <th>수량</th>
+                    <th>위치</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 여기에 향후 DB에서 불러온 재고 데이터를 삽입 -->
+                <tr>
+                    <td>001</td>
+                    <td>상품 A</td>
+                    <td>50</td>
+                    <td>창고 1</td>
+                </tr>
+                <tr>
+                    <td>002</td>
+                    <td>상품 B</td>
+                    <td>30</td>
+                    <td>창고 2</td>
+                </tr>
+                <!-- 향후 재고 데이터 추가 -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>
