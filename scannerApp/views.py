@@ -12,57 +12,14 @@ from config import config
 
 # 이미지에서 바코드를 스캔하는 함수 - 이미지를 업로드했을 때 상품을 등록하기 위한 코드
 
-# Config 값
+# Config값
 host     = config.host
 user     = config.user
 password = config.password
 database = config.database
 port     = config.port
-#
-# 바코드 스캔 함수
 
-
-
-# 0929 (일) 진우 머지했는데 현서가 작업한거랑 다르다길래 url패턴 바꾼거 view 이상없는지 확인용
-
-# def barcode_reading_view(request):
-#     barcode_lst = []
-#     if request.method == "POST" and request.FILES.get('barcode_image'):
-#         # 업로드된 파일 가져오기
-#         barcode_image = request.FILES['barcode_image']
-        
-#         # 파일을 메모리에서 numpy 배열로 변환(변환해야 openCV에서 처리가능)
-#         img_array = np.asarray(bytearray(barcode_image.read()), dtype=np.uint8)
-        
-#         # 이미지를 컬러로 읽기
-#         barcode_img = cv2.imdecode(img_array, cv2.IMREAD_COLOR)  
-        
-#         # 이미지를 흑백으로 변환
-#         gray = cv2.cvtColor(barcode_img, cv2.COLOR_BGR2GRAY)
-        
-#         # 바코드 디코딩 
-#         decoded = pyzbar.decode(gray)
-        
-#         for d in decoded:
-#             barcode_data = d.data.decode('utf-8')
-#             barcode_lst.append(barcode_data)
-
-#             # 바코드 영역에 사각형 그리기
-#             cv2.rectangle(barcode_img, 
-#                           (d.rect[0], d.rect[1]), 
-#                           (d.rect[0] + d.rect[2], d.rect[1] + d.rect[3]), 
-#                           (0, 0, 255), 2)
-            
-#         if barcode_lst:
-#             return HttpResponse(f"바코드 내용: {', '.join(barcode_lst)}")
-#         else:
-#             return HttpResponse("바코드를 인식하지 못했습니다.")
-    
-#     return render(request, 'scan_result.html')
-
-
-
-# 테스트 지워도 ㄱㅊ
+barcode_lst = []
 def barcode_reading_view(request):
     barcode_lst = []  # 함수 내에서 리스트 초기화
     if request.method == "POST" and request.FILES.get('barcode_image'):
@@ -97,37 +54,18 @@ def barcode_reading_view(request):
     
     return render(request, 'scan_result.html')
 
-
-
-
-
-
-
-
-
-
-
 def upload_page_view(request):
     return render(request, 'upload.html')
 
 # mysql 데이터베이스 연결 설정 함수
 def connect_to_db():
-    try:
-        print('>>>>>>> 디버깅: MySQL 연결 시도 중...')
-        db = mysql.connector.connect(
-            host=host,  # MySQL 호스트 주소
-            user=user,  # MySQL 사용자명
-            password=password,  # MySQL 비밀번호
-            database=database,  # 사용할 데이터베이스
-            port=port
-        )
-        # 연결 성공 시 출력
-        print("MySQL 데이터베이스에 성공적으로 연결되었습니다.")
-        return db
-    except mysql.connector.Error as err:
-        # 연결 실패 시 출력
-        print(f"MySQL 연결 실패: {err}")
-        return None
+    return mysql.connector.connect(
+        host=host,  # MySQL 호스트 주소
+        user=user,  # MySQL 사용자명
+        password=password,  # MySQL 비밀번호
+        database=database,  # 사용할 데이터베이스
+        port=port
+    )
 
 # 바코드 디코딩 함수(DB저장용)
 def decode_barcode(frame):
@@ -142,6 +80,22 @@ def decode_barcode(frame):
         barcode_data_list.append((barcode_data, barcode_type))
     
     return barcode_data_list
+
+# mysql 데이터베이스 연결 설정 함수
+# os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'rootWEB.settings')
+# django.setup()
+def connect_to_db():
+    
+    db_config = {
+        'host': config.host,
+        'user': config.user,
+        'password': config.password,
+        'database': config.database,
+        'port': config.port
+    }
+
+    # MySQL에 연결
+    return mysql.connector.connect(**db_config)
 
 # 바코드를 MySQL에 저장하는 함수
 def save_barcodes_to_db(barcode_data_list):

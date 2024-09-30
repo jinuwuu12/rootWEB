@@ -18,7 +18,7 @@ from config import config
 host = config.host
 user = config.user
 password = config.password
-name = config.database
+database = config.database
 port = config.port
 #
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -88,7 +88,7 @@ WSGI_APPLICATION = "rootWEB.wsgi.application"
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',  # MySQL을 사용한다는 의미
-        'NAME': name,                  # 사용할 데이터베이스 이름
+        'NAME': database,                  # 사용할 데이터베이스 이름
         'USER': user,                     # 데이터베이스 사용자
         'PASSWORD': password,              # 데이터베이스 사용자 비밀번호
         'HOST': host,                   # 로컬에서 실행 중이면 localhost
