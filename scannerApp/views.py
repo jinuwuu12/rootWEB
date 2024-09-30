@@ -58,17 +58,6 @@ def upload_page_view(request):
     return render(request, 'upload.html')
     
 
-# mysql 데이터베이스 연결 설정 함수
-def connect_to_db():
-    return mysql.connector.connect(
-        host=host,  # MySQL 호스트 주소
-        user=user,  # MySQL 사용자명
-        password=password,  # MySQL 비밀번호
-        database=database,  # 사용할 데이터베이스
-        port=port
-    )
-
-
 # 바코드 디코딩 함수(DB저장용)
 def decode_barcode(frame):
     barcodes = pyzbar.decode(frame)
@@ -128,21 +117,6 @@ def save_barcodes_to_db(barcode_data_list):
     except mysql.connector.Error as e:
         print(f"MySQL Error: {e}")
     
-# DB에 바코드 정보가 있는지 확인하는 함수
-def is_barcode_exists(barcode):
-    db = connect_to_db()
-    cursor = db.cursor()
-    query = "SELECT COUNT(*) FROM barcodes WHERE barcode = %s"
-    cursor.execute(query, (barcode,))
-    count = cursor.fetchone()[0]
-    return count > 0
-
-# DB안에 바코드 정보가 있는 경우 
-def if_there_are_barcode_in_db(barcode_data_list):
-    for barcode in barcode_data_list:
-        # 데이터베이스에 바코드가 이미 존재하는지 확인
-        if not is_barcode_exists(barcode):
-            save_barcodes_to_db(barcode)
     
 
 #카메라에서 실시간으로 바코드를 인식하고 MySQL에 저장
