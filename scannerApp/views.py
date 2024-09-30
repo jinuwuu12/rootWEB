@@ -8,20 +8,10 @@ import numpy as np
 from .models import Barcode_img, barcode_info
 import mysql.connector
 from config import config
+from django.conf import settings  # settings.py의 설정을 불러오기 위한 모듈
 
 
 # 이미지에서 바코드를 스캔하는 함수 - 이미지를 업로드했을 때 상품을 등록하기 위한 코드
-
-# Config 값
-host     = config.host
-user     = config.user
-password = config.password
-database = config.database
-port     = config.port
-#
-# 바코드 스캔 함수
-
-
 barcode_lst = []
 def barcode_reading_view(request):
     if request.method == "POST" and request.FILES.get('barcode_image'):
@@ -62,12 +52,14 @@ def upload_page_view(request):
 
 # mysql 데이터베이스 연결 설정 함수
 def connect_to_db():
+    db = settings.DATABASE_CONFIG
+    
     return mysql.connector.connect(
-        host=host,  # MySQL 호스트 주소
-        user=user,  # MySQL 사용자명
-        password=password,  # MySQL 비밀번호
-        database=database,  # 사용할 데이터베이스
-        port=port
+        host=db['HOST'],
+        user=db['USER'],
+        password=db['PASSWORD'],
+        database=db['NAME'],
+        port=int(db['PORT'])  # 포트는 정수형으로 변환
     )
 
 # 바코드 디코딩 함수(DB저장용)
