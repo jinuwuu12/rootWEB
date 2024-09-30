@@ -3,6 +3,12 @@ import os
 from config import config
 import configparser
 
+# Config값
+host = config.host
+user = config.user
+password = config.password
+database = config.database
+port = config.port
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -32,7 +38,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "scannerApp"
+    "scannerApp",
+    'inventoryflowApp',
+    'inventorycheckApp',
 ]
 
 MIDDLEWARE = [
@@ -50,7 +58,7 @@ ROOT_URLCONF = "rootWEB.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [os.path.join(BASE_DIR, 'templates')],
+        "DIRS": [os.path.join(BASE_DIR, 'rootWEB','templates')],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -71,12 +79,12 @@ WSGI_APPLICATION = "rootWEB.wsgi.application"
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': config['database']['DB_NAME'],
-        'USER': config['database']['DB_USER'],
-        'PASSWORD': config['database']['DB_PASSWORD'],
-        'HOST': config['database']['DB_HOST'],
-        'PORT': config['database']['DB_PORT'],
+        'ENGINE': 'django.db.backends.mysql',  # MySQL을 사용한다는 의미
+        'NAME': database,                  # 사용할 데이터베이스 이름
+        'USER': user,                     # 데이터베이스 사용자
+        'PASSWORD': password,              # 데이터베이스 사용자 비밀번호
+        'HOST': host,                   # 로컬에서 실행 중이면 localhost
+        'PORT': port,                        # MySQL 기본 포트
     }
 }
 

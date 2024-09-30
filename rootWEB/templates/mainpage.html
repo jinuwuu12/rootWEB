@@ -1,0 +1,30 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>메인 페이지</title>
+</head>
+<body>
+    <h1>메인 페이지</h1>
+
+    <!-- 바코드 스캔 페이지로 이동하는 버튼 -->
+    <a href="{% url 'before_scan' %}">
+        <button>바코드 스캔</button>
+    </a>
+
+
+    <!-- 입출고 관리 페이지로 이동하는 버튼 -->
+    <a href="{% url 'IF_Main' %}">
+        <button>입출고 관리</button>
+    </a>
+
+    <!-- 재고조회 페이지로 이동하는 버튼 -->
+    <a href="{% url 'IC_Main' %}">
+        <button>재고조회</button>
+    </a>
+
+
+</body>
+</html>
