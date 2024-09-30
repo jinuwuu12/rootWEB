@@ -2,3 +2,4 @@ rootWEB/settings.py
 barcodingVenv
 settings.py
 .config/
+config/config.txt
