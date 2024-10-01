@@ -5,7 +5,7 @@ from pyzbar.pyzbar import decode
 from pyzbar import pyzbar
 import cv2
 import numpy as np
-from .models import Barcode_img, barcode_info
+from .models import barcode_info
 from config import config 
 import mysql.connector    #DB 연결 (def connect_to_db)
 
@@ -105,7 +105,7 @@ def save_barcodes_to_db(barcode_data_list):
                 cnt = cursor.fetchone()[0]
 
                 if cnt == 0 :
-                    cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_structr, barcode_num) VALUES (%s, %s)", (data[0], data[1]))
+                    cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_num, barcode_structr) VALUES (%s, %s)", (data[0], data[1]))
                 else :
                     print("나중에 바코드 중복될 때 사용할 부분")
             else:
@@ -149,7 +149,4 @@ def scan_and_save_barcodes():
     finally:
         cap.release()
         cv2.destroyAllWindows()
-
-
-scan_and_save_barcodes()
 
