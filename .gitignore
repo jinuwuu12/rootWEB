@@ -1,7 +1,4 @@
-<<<<<<< HEAD
-.env
-=======
 rootWEB/settings.py
 barcodingVenv
-config.py
->>>>>>> 1056894775f0211e2710c4b7d2977f74c23455c7
+config/
+
