@@ -5,7 +5,7 @@ from pyzbar.pyzbar import decode
 from pyzbar import pyzbar
 import cv2
 import numpy as np
-from .models import barcode_info
+from .models import product_info
 from config import config 
 import mysql.connector    #DB 연결 (def connect_to_db)
 
@@ -101,11 +101,11 @@ def save_barcodes_to_db(barcode_data_list):
             
             # 튜플인지 확인하고 길이가 2인 경우만 처리
             if isinstance(data, tuple) and len(data) == 2:
-                cursor.execute("SELECT COUNT(*) FROM scannerapp_barcode_info WHERE barcode_structr = %s AND barcode_num = %s", (data[0], data[1]))
+                cursor.execute("SELECT COUNT(*) FROM scannerapp_product_info WHERE barcode_structr = %s AND barcode_num = %s", (data[0], data[1]))
                 cnt = cursor.fetchone()[0]
 
                 if cnt == 0 :
-                    cursor.execute("INSERT INTO scannerapp_barcode_info (barcode_num, barcode_structr) VALUES (%s, %s)", (data[0], data[1]))
+                    cursor.execute("INSERT INTO scannerapp_product_info (barcode_num, barcode_structr) VALUES (%s, %s)", (data[0], data[1]))
                 else :
                     print("나중에 바코드 중복될 때 사용할 부분")
             else:
