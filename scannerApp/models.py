@@ -16,7 +16,13 @@ class product_info(models.Model):
     barcode_structr = models.CharField(max_length=100, default="EAN-13")
     
     #외래키 설정
-    userInfo_id = models.OneToOneField('mainApp.user_info', to_field='user_id', default='유저아이디', on_delete=models.CASCADE, unique=True) #수퍼키
+    userInfo_id = models.OneToOneField(
+        'mainApp.user_info', 
+        to_field='user_id', 
+        default='유저아이디', 
+        on_delete=models.CASCADE,
+        db_column='userInfo_id',
+        unique=True) #수퍼키
     
     class Meta:
         constraints = [

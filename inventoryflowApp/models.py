@@ -13,8 +13,16 @@ class product_log(models.Model):
     storage_retrieval = models.CharField(max_length=2, choices=STATUS_CHOICES, primary_key=True)
     
     #외래키 설정
-    userInfo_id = models.OneToOneField('mainApp.user_info', to_field='user_id', default='유저아이디' ,on_delete=models.CASCADE ) #수퍼키
-    productInfo_barcodeNum = models.OneToOneField('scannerApp.product_info', to_field='barcode_num', on_delete=models.CASCADE) #수퍼키
+    userInfo_id = models.OneToOneField('mainApp.user_info', 
+                                       to_field='user_id', 
+                                       default='유저아이디',
+                                       db_column='userInfo_id',
+                                       on_delete=models.CASCADE ) #수퍼키
+    
+    productInfo_barcodeNum = models.OneToOneField('scannerApp.product_info',
+                                                  to_field='barcode_num',
+                                                  db_column='productInfo_barcodeNum',
+                                                  on_delete=models.CASCADE) #수퍼키
     
     class Meta:
         constraints = [
