@@ -1,5 +1,6 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 import os
+from rootWEB.views import index
 # Create your views here.
 def login_page(request):
     from django.conf import settings
@@ -7,3 +8,10 @@ def login_page(request):
     print(os.path.join(settings.BASE_DIR, 'templates'))  # 템플릿 경로 확인
     
     return render(request, 'loginpage.html')
+
+def login_button():
+    return index()
+
+def signup_button(request):
+    return render(request, 'signup.html')
+        
