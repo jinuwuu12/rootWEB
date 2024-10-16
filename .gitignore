@@ -1,3 +1,5 @@
 rootWEB/settings.py
 barcodingVenv
 config/config.py
+__pycache__/
+*.py[cod]
