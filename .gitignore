@@ -3,3 +3,8 @@ rootWEB/settings.py
 barcodingVenv
 settings.py
 config.py
+rootWEB/__pycache__
+scannerApp/__pycache__
+inventoryflowApp/__pycache__
+inventorycheckApp/__pycache__
+*.pyc[cod]
