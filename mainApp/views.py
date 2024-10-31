@@ -17,4 +17,5 @@ def login_button():
 
 def signup_button(request):
     return render(request, 'signup.html')
-        
+
+# def get_user_data():
