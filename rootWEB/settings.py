@@ -38,10 +38,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "scannerApp",
     'mainApp',
     'inventoryflowApp',
     'inventorycheckApp',
+    'scannerApp.apps.ScannerappConfig', # IF_pd_log 테이블에 자동으로 현재 시각 추가
 ]
 
 MIDDLEWARE = [

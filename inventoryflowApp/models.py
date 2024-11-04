@@ -8,7 +8,7 @@ class product_log(models.Model):
         ('출고', '출고'),
         ('입고', '입고'),
     )
-    change_quantity = models.IntegerField()
+    change_quantity = models.IntegerField(null = True)
     date_time  = models.DateTimeField(default=timezone.now, unique=True) #수퍼키
     storage_retrieval = models.CharField(max_length=2, choices=STATUS_CHOICES, primary_key=True)
     

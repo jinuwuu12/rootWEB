@@ -13,7 +13,7 @@ class product_info(models.Model):
     product_memo   = models.TextField(null=True, blank=True)
     product_count  = models.IntegerField(null = True)
     # 바코드 형식 ex) EAN-13
-    barcode_structr = models.CharField(null = True, max_length=100, default="EAN-13")
+    barcode_structure = models.CharField(null = True, max_length=100, default="EAN-13")
     
      # 외래키 설정 (다대일 관계)
     userInfo_id = models.ForeignKey(
