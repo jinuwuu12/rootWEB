@@ -88,12 +88,12 @@ def connect_to_db():
 
 
 # 바코드를 MySQL에 저장하는 함수
-def save_barcodes_to_db(barcode_data_list):
+def save_barcodes_to_db(request, barcode_data_list):
     try:
         print(">>>>>>> save_barcodes_to_db 함수 실행")
         db = connect_to_db()
         cursor = db.cursor()
-        
+
         for data in barcode_data_list:
             # 데이터가 ndarray인지 확인하고, 튜플로 변환
             if isinstance(data, np.ndarray):
@@ -101,52 +101,89 @@ def save_barcodes_to_db(barcode_data_list):
             
             # 튜플인지 확인하고 길이가 2인 경우만 처리
             if isinstance(data, tuple) and len(data) == 2:
-                cursor.execute("SELECT COUNT(*) FROM scannerapp_product_info WHERE barcode_structr = %s AND barcode_num = %s", (data[0], data[1]))
+                cursor.execute("SELECT COUNT(*) FROM scannerapp_product_info WHERE barcode_num = %s", (data[0],))
                 cnt = cursor.fetchone()[0]
 
-                if cnt == 0 :
+                if cnt == 0:
                     cursor.execute("INSERT INTO scannerapp_product_info (barcode_num, barcode_structr) VALUES (%s, %s)", (data[0], data[1]))
-                else :
-                    print("나중에 바코드 중복될 때 사용할 부분")
+                    db.commit()
+                else:
+                    # 바코드가 이미 존재하는 경우 제품 정보 렌더링
+                    return render_product_info(request, data[0])
             else:
                 print(f"Invalid data format: {data}")
-        
+
         db.commit()
-        cursor.close()
-        db.close()
     except mysql.connector.Error as e:
         print(f"MySQL Error: {e}")
-    
-    
+    finally:
+        cursor.close()
+        db.close()
 
-#카메라에서 실시간으로 바코드를 인식하고 MySQL에 저장
+    return HttpResponse('여기임')  # 렌더링되지 않은 경우 None 반환
 
-def scan_and_save_barcodes():
+def render_product_info(request, barcode_num):
+    try:
+        db = connect_to_db()
+        cursor = db.cursor()
+
+        # 특정 바코드 번호로 데이터 조회
+        cursor.execute("SELECT barcode_num, boarcode_name FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
+        value = cursor.fetchone()
+
+        if value:
+            # 조회된 데이터를 딕셔너리로 변환
+            product_info = {
+                'barcode_num': value[0]
+            }
+            context = {'product_info': product_info}
+            return render(request, 'test_result.html', context)
+        else:
+            return render(request, 'test_result.html', {'error': 'Product not found'})
+    except mysql.connector.Error as e:
+        print(f"MySQL Error: {e}")
+        return render(request, 'test_result.html', {'error': 'Database error'})
+    finally:
+        cursor.close()
+        db.close()
+
+def scan_and_save_barcodes(request):
     cap = cv2.VideoCapture(0)
-    recognized_barcodes = set() # 중복 방지 셋 생성
+    recognized_barcodes = set()  # 중복 방지 셋 생성
     try:
         while True:
             ret, frame = cap.read()
             if not ret:
                 break
 
-            
             # 바코드가 있으면 MySQL에 저장
             barcode_data_list = decode_barcode(frame)
             if barcode_data_list:
-                for barcode_data in barcode_data_list :
-                    if barcode_data not in recognized_barcodes :
-                        save_barcodes_to_db([barcode_data])
-                        recognized_barcodes.add(barcode_data) #중복방지 셋에 저장
+                for barcode_data in barcode_data_list:
+                    if barcode_data not in recognized_barcodes:
+                        recognized_barcodes.add(barcode_data)  # 중복 방지 셋에 저장
                         cap.release()
                         cv2.destroyAllWindows()
-                        return
+                        return save_barcodes_to_db(request, [barcode_data])
+                        # HTML이 렌더링된 경우 응답 반환
+
+                # 바코드가 인식된 후 처리되면 루프를 종료
+                cap.release()
+                cv2.destroyAllWindows()
+                return HttpResponse("Barcode processed and saved.")
+                
             cv2.imshow("Barcode Scanner", frame)
-            #if ret == True:
-                #break
+
+            # 'q' 키를 누르면 루프 종료
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
     finally:
         cap.release()
         cv2.destroyAllWindows()
 
+    # 바코드가 인식되지 않고 종료되었을 때 기본 응답 반환
+    return HttpResponse("No barcode detected or operation canceled.")
+
+
+def test(request) :
+    return render(request, 'test.html')
