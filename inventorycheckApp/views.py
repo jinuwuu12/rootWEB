@@ -12,6 +12,10 @@ from django.http import HttpResponse
 from django.db import connection
 
 
+# 기간 선택 임포트
+from django.views.decorators.csrf import csrf_exempt
+
+
 def index(request):
     # print('TEST')
     return render(request, 'IC_Main.html')
@@ -19,9 +23,10 @@ def index(request):
 
 
 
-# DB에서 조회
-def index_with_userid(request):
+# userId + DB에서 조회
+def index_with_userid_selected_date(request):
     user_id = request.GET.get('userId', None)  # GET 요청에서 'userId' 값을 가져옴
+    selected_date = request.POST.get('selected_date', None)
     products = []
     # print("Received userId:", user_id)  # 터미널에 userId 출력
 

@@ -5,90 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>재고 조회</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
-
-        .container {
-            max-width: 960px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        .button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-            display: inline-block;
-            margin-bottom: 20px;
-            transition: background-color 0.3s ease;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
+        /* 스타일 생략 */
     </style>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    
+    <!-- Date Range Picker CSS (수정된 CDN 링크) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" />
 </head>
 <body>
+    <div class="container">
+        <h2>조회 폼</h2>
+        <form id="searchForm" method="get" action="{% url 'IC_Main_selected' %}">
+            {% csrf_token %}
+            
+            <!-- User ID 입력 필드 -->
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" name="userId" placeholder="User ID 입력" class="form-control" required>
+    
+            <!-- 기간 선택 필드 -->
+            <label for="daterange">기간 선택:</label>
+            <input type="text" class="form-control" id="daterange" name="selected_date_range" placeholder="기간을 선택하세요" required>
+            
+            <!-- 제출 버튼 -->
+            <button type="submit" class="btn btn-primary mt-2">조회</button>
+        </form>
+    </div>
+    
+    <!-- Moment.js (Date Range Picker 의존성) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
 
-<div class="container">
-    <h1>재고 조회</h1>
+    <!-- jQuery (3.5.1 버전) -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
 
-    <!-- 재고 추가 버튼 -->
-    <a href="#" class="button">재고 추가</a>
+    <!-- Date Range Picker JS (수정된 CDN 링크) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
 
-    <!-- USER_ID 입력하는 형태로 임의로 만듦 -->
-    <form method="GET" action="{% url 'IC_Main_userID' %}">
-        <label for="userId">User ID:</label>
-        <input type="text" id="userId" name="userId" placeholder="User ID 입력">
-        <button type="submit">조회</button>
-    </form>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function(){
+            console.log("jQuery version:", $.fn.jquery); // jQuery 버전 확인용 로그
+            console.log("Moment.js loaded:", typeof moment !== 'undefined'); // Moment.js 로드 확인
+
+            // Date Range Picker 설정
+            $('#daterange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD'
+                },
+                autoApply: true, // 기간 선택 후 자동 적용
+                opens: 'left'     // 드롭다운 위치
+            });
+    
+            // 유효성 검사 및 폼 제출
+            $('#searchForm').on('submit', function(event) {
+                var userId = $('#userId').val();
+                var selectedDateRange = $('#daterange').val();
+    
+                if (!userId || !selectedDateRange) {
+                    event.preventDefault(); // 폼 제출 방지
+                    alert("User ID와 기간을 모두 입력해야 합니다.");
+                }
+            });
+        });
+    </script>
 
 
-    <!-- 입력된 User ID 표시 -->
-    {% if user_id %}
-        <p>현재 입력된 User ID: <strong>{{ user_id }}</strong></p>
-    {% else %}
-        <p>입력된 User ID가 없습니다.</p>
-    {% endif %}
-
-
-
-    <!-- 엑셀 다운 버튼 -->
-    {% comment %} <a href="{% url 'download_excel' %}?userId={{ userId }}" class="button">엑셀 다운로드</a> {% endcomment %}
     <!-- 엑셀 다운로드 버튼 -->
     <a href="{% url 'download_excel' %}?userId={{ user_id }}" class="button">엑셀 다운로드</a>
 
-
-    
     <table>
         <thead>
             <tr>
@@ -120,9 +107,8 @@
                 </tr>
             {% endif %}
         </tbody>
-        
     </table>
-</div>
+
 
 </body>
 </html>
