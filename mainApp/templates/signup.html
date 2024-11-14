@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,37 +11,38 @@
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/loginpage.css' %}">
 </head>
 <body>
     <div class="background">
         <div class="shape"></div>
         <div class="shape"></div>
     </div>
-    <form>
+    <form method="POST" action="{% url 'getUserInfo' %}">
+        {% csrf_token %}
         <a href="/">
-           <h3>Barcoding Login</h3>
+            <h3>Barcoding Login</h3>
         </a>
     
-
         <label for="username">아이디</label>
-        <input type="text" placeholder="Email or Phone" id="username">
+        <input type="text" name='username' placeholder="Email or Phone" id="username">
 
         <label for="password">비밀번호</label>
-        <input type="password" placeholder="Password" id="password">
+        <input type="password" name="password" placeholder="Password" id="password">
+
+        <label for="password">이메일</label>
+        <input type="email" name="email" placeholder="email" id="password">
+
+        <label for="password">이름</label>
+        <input type="text" name='name' placeholder="이름" id="password">
+
+        <label for="password">전화번호</label>
+        <input type="phone2numeric" name='phone' placeholder="전화번호" id="password">
 
         <div class="button-container">
-          <a href="{% url 'login_button' %}">
-              <button class="login-button">로그인</button>
-          </a>
-          <a href="{% url 'signup_button' %}">
-              <button class="signup-button">회원가입</button>
-          </a>
+            <button type="submit">회원가입</button>
         </div>
-      
-        <div class="social">
-          <div class="go"><i class="fab fa-google"></i>  Google</div>
-          <div class="fb"><i class="fab fa-facebook"></i>  Facebook</div>
-        </div>
+
     </form>
 </body>
 </html>
