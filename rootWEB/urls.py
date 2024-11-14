@@ -4,6 +4,10 @@ from django.urls import path, include
 from . import views  # 메인 페이지 뷰 가져오기
 
 
+from django.conf import settings  # settings 임포트
+from django.conf.urls.static import static  # static 함수 임포트
+
+
 urlpatterns = [
     path('', views.index, name='main_page'),
     path('main/', include('mainApp.urls')),

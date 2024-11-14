@@ -3,7 +3,7 @@ from django.db import models
 # 유저 테이블
 class user_info(models.Model):
     user_id = models.CharField(max_length=100, null=False, unique=True, primary_key=True)
-    user_password = models.PasswordField(max_length=128)  # 
+    user_password = models.CharField(max_length=128)  
     user_email = models.EmailField(unique=True)
     user_name = models.CharField(max_length=100)
     user_phone = models.CharField(max_length=15)
@@ -16,3 +16,7 @@ class user_info(models.Model):
     
     def __str__(self):
         return f'{self.user_id} ({self.user_name})'
+
+    def set_password(self, raw_password):
+        from django.contrib.auth.hashers import make_password
+        self.user_password = make_password(raw_password)
