@@ -10,6 +10,8 @@ password = config.password
 database = config.database
 port = config.port
 mySECRET_KEY = config.mySECRET_KEY
+
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -26,6 +28,18 @@ SECRET_KEY = mySECRET_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+
+# 미디어 파일이 저장될 경로 (프로젝트 디렉토리 내 'media' 폴더)
+MEDIA_ROOT = BASE_DIR / 'media'
+
+# 미디어 파일을 불러올 때 사용할 URL 경로
+MEDIA_URL = '/media/'
+
+
+
+
+
+
 ALLOWED_HOSTS = []
 
 
@@ -38,10 +52,10 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "scannerApp",
     'mainApp',
     'inventoryflowApp',
     'inventorycheckApp',
+    'scannerApp.apps.ScannerappConfig', # IF_pd_log 테이블에 자동으로 현재 시각 추가
 ]
 
 MIDDLEWARE = [
