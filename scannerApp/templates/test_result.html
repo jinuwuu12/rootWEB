@@ -2,9 +2,29 @@
 <html lang="en">
 
 <head>
+    <title>정보 수정</title>
 </head>
 
-<body>  
-    <p>Barcode Number: {{ product_info.barcode_num }}</p>
-        
+<body>
+    <h2>정보 수정</h2>
+    <form method="POST" action="{% url 'update_product' %}">
+        {% csrf_token %}
+        <label for="barcode_num">Barcode Number:</label>
+        <input type="text" id="barcode_num" name="barcode_num" value="{{ product_info.barcode_num }}" readonly><br>
+
+        <label for="product_name">Product Name:</label>
+        <input type="text" id="barcode_name" name="product_name" value="{{ product_info.product_name|default:'' }}"><br>
+
+        <label for="quantity">Quantity:</label>
+        <input type="number" id="quantity" name="quantity" value="{{ product_info.quantity|default:'' }}"><br>
+
+        <label for="product_memo">Product Memo:</label>
+        <input type="text" id="product_memo" name="product_memo" value="{{ product_info.product_memo|default:'' }}"><br>
+
+        <!-- Add more fields as necessary -->
+
+        <button type="submit">Save</button>
+    </form>
 </body>
+
+</html>

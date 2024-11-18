@@ -128,13 +128,16 @@ def render_product_info(request, barcode_num):
         cursor = db.cursor()
 
         # 특정 바코드 번호로 데이터 조회
-        cursor.execute("SELECT barcode_num, boarcode_name FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
+        cursor.execute("SELECT barcode_num, product_name, quantity, product_memo FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
         value = cursor.fetchone()
 
         if value:
             # 조회된 데이터를 딕셔너리로 변환
             product_info = {
-                'barcode_num': value[0]
+                'barcode_num'  : value[0],
+                'product_name' : value[1],
+                'quantity'     : value[2],
+                'product_memo' : value[3]
             }
             context = {'product_info': product_info}
             return render(request, 'test_result.html', context)
@@ -187,3 +190,33 @@ def scan_and_save_barcodes(request):
 
 def test(request) :
     return render(request, 'test.html')
+
+def update_product(request):
+    if request.method == 'POST':
+        barcode_num = request.POST['barcode_num']
+        product_name = request.POST.get('product_name', None)
+        quantity = request.POST.get('quantity', None)
+        product_memo = request.POST.get('product_memo', None)
+
+        try:
+            db = connect_to_db()
+            cursor = db.cursor()
+
+            # 데이터 업데이트 실행
+            cursor.execute(
+                """
+                UPDATE scannerapp_product_info
+                SET product_name = %s, quantity = %s, product_memo = %s
+                WHERE barcode_num = %s
+                """,
+                (product_name, quantity, product_memo, barcode_num)
+            )
+            db.commit()
+        except mysql.connector.Error as e:
+            print(f"MySQL Error: {e}")
+        finally:
+            cursor.close()
+            db.close()
+
+        return render(request, 'test_success.html')
+    return HttpResponse("Invalid request.")

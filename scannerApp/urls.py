@@ -7,6 +7,6 @@ urlpatterns = [
     path('test/', views.test, name = 'test'),
     path('run/', views.scan_and_save_barcodes, name = 'run'),
     path('test_result/', views.render_product_info, name = 'test_result'),
+    path('update_product/', views.update_product, name='update_product'),
     # path('debugging/', views.debugging, name='debugging')
 ]
-
