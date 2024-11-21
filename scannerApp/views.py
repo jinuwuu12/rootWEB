@@ -141,12 +141,12 @@ def render_product_info(request, barcode_num):
                 'barcode_structr' : value[4]
             }
             context = {'product_info': product_info}
-            return render(request, 'test_result.html', context)
+            return render(request, 'result.html', context)
         else:
-            return render(request, 'test_result.html', {'error': 'Product not found'})
+            return render(request, 'result.html', {'error': 'Product not found'})
     except mysql.connector.Error as e:
         print(f"MySQL Error: {e}")
-        return render(request, 'test_result.html', {'error': 'Database error'})
+        return render(request, 'result.html', {'error': 'Database error'})
     finally:
         cursor.close()
         db.close()
@@ -189,8 +189,8 @@ def scan_and_save_barcodes(request):
     return HttpResponse("No barcode detected or operation canceled.")
 
 
-def test(request) :
-    return render(request, 'test.html')
+def scan(request) :
+    return render(request, 'scan.html')
 
 def update_product(request):
     if request.method == 'POST':
@@ -219,5 +219,5 @@ def update_product(request):
             cursor.close()
             db.close()
 
-        return render(request, 'test_success.html')
+        return render(request, 'success.html')
     return HttpResponse("Invalid request.")
