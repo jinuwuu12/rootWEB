@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/scan.css' %}">
+    <title>스캔 테스트 페이지</title>
+    
+
+</head>
+
+<body>
+    <div class="container">
+        <h1>스캔 테스트 페이지</h1>
+        <p>바코드를 스캔하면 입력/수정 화면으로 이동됩니다.</p>
+        <a href="{% url 'run' %}" class="button">바코드 스캔하기</a>
+    </div>
+</body>
+
+</html>

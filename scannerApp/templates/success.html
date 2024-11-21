@@ -1,0 +1,25 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/success.css' %}">
+
+    <title>스캔 테스트 페이지</title>
+
+</head>
+
+<body>
+    
+
+    <div class="container">
+        <h1>수정 완료 페이지</h1>
+        <p>* 수정이 완료 되었습니다.</p>
+        <p>＊db를 확인해주세요.</p>
+        <a href="{% url 'scan' %}" class="button">테스트 초기 화면으로 돌아가기</a>
+    </div>
+</body>
+
+</html>

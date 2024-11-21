@@ -35,12 +35,8 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # 미디어 파일을 불러올 때 사용할 URL 경로
 MEDIA_URL = '/media/'
 
+ALLOWED_HOSTS = ['*']
 
-
-
-
-
-ALLOWED_HOSTS = []
 
 
 # Application definition
