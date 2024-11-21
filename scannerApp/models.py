@@ -8,15 +8,14 @@ class product_info(models.Model):
     # 사용자 입력 컬럼
     product_name = models.CharField(null=True, max_length=100)
     classification = models.CharField(null=True, max_length=100)
-    initial_stock = models.IntegerField(null=True)  # 초기 재고
-    current_quantity = models.IntegerField(null=True)  # 현재 수량
+    quantity = models.IntegerField(null=True)  # 현재 수량
 
     # 이미지 파일 경로 저장
-    product_image = models.ImageField(upload_to='products/', null=True, blank=True)
+    product_img = models.ImageField(upload_to='products/', null=True, blank=True)
 
     # 기타 필드
     product_memo = models.TextField(null=True, blank=True)
-    barcode_structure = models.CharField(max_length=100, default="EAN-13")
+    barcode_structr = models.CharField(max_length=100, default="EAN-13")
 
     #외래키 설정
     user_id = models.ForeignKey(
