@@ -120,7 +120,7 @@ def save_barcodes_to_db(request, barcode_data_list):
         cursor.close()
         db.close()
 
-    return HttpResponse('여기임')  # 렌더링되지 않은 경우 None 반환
+    return render_product_info(request, data[0])
 
 def render_product_info(request, barcode_num):
     try:
@@ -128,16 +128,17 @@ def render_product_info(request, barcode_num):
         cursor = db.cursor()
 
         # 특정 바코드 번호로 데이터 조회
-        cursor.execute("SELECT barcode_num, product_name, quantity, product_memo FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
+        cursor.execute("SELECT barcode_num, product_name, quantity, product_memo, barcode_structr FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
         value = cursor.fetchone()
 
         if value:
             # 조회된 데이터를 딕셔너리로 변환
             product_info = {
-                'barcode_num'  : value[0],
-                'product_name' : value[1],
-                'quantity'     : value[2],
-                'product_memo' : value[3]
+                'barcode_num'     : value[0],
+                'product_name'    : value[1],
+                'quantity'        : value[2],
+                'product_memo'    : value[3],
+                'barcode_structr' : value[4]
             }
             context = {'product_info': product_info}
             return render(request, 'test_result.html', context)

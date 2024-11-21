@@ -1,29 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bootstrap</title>
+    <title>스캔 테스트 페이지</title>
     <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+            background: #fff;
+            padding: 50px 70px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            text-align: bold;
+            margin-bottom: 20px;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            {% comment %} font-weight: bold; {% endcomment %}
+            margin-bottom: 30px;
+        }
+
         .button {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 12px 25px;
             background-color: #007bff;
             color: white;
             text-align: center;
             text-decoration: none;
+            font-size: 16px;
+            font-weight: bold;
             border-radius: 5px;
-            transition: background-color 0.3s ease;
+            transition: background-color 0.3s ease, transform 0.2s ease;
         }
-    
+
         .button:hover {
             background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        .button:active {
+            background-color: #004494;
         }
     </style>
 </head>
+
 <body>
-    <a href="{% url 'run' %}" class="button">바코드 스캔하기</a>
-    
+    <div class="container">
+        <h1>스캔 테스트 페이지</h1>
+        <p>바코드를 스캔하면 입력/수정 화면으로 이동됩니다.</p>
+        <a href="{% url 'run' %}" class="button">바코드 스캔하기</a>
+    </div>
 </body>
 
 </html>
