@@ -26,7 +26,7 @@ def index(request):
 # userId + DB에서 조회
 def index_with_userid_selected_date(request):
     user_id = request.GET.get('userId', None)  # GET 요청에서 'userId' 값을 가져옴
-    selected_date = request.POST.get('selected_date', None)
+    selected_date = request.GET.get('selected_date', None)
     products = []
     # print("Received userId:", user_id)  # 터미널에 userId 출력
 
@@ -36,7 +36,7 @@ def index_with_userid_selected_date(request):
             cursor.execute("""
                 SELECT barcode_num, barcode_structure, product_name, classification, quantity, product_img, product_memo
                 FROM scannerapp_product_info
-                WHERE userInfo_id = %s
+                WHERE user_id = %s
             """, [user_id])
             rows = cursor.fetchall()
 

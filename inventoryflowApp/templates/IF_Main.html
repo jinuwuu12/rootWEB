@@ -3,116 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>inventoryflow </title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-        }
+    <title>입출고 관리</title>
 
-        .container {
-            max-width: 960px;
-            margin: 50px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 
-        h1 {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .button-group {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 20px;
-        }
-
-        .button {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            border-radius: 5px;
-            transition: background-color 0.3s ease;
-            width: 48%;
-        }
-
-        .button:hover {
-            background-color: #0056b3;
-        }
-
-        .button:active {
-            background-color: #003f7f;
-        }
-
-        .table-container {
-            margin-top: 30px;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+    <!-- Date Range Picker CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.css" />
 </head>
 <body>
+    <div class="container">
+        <h2>조회 폼</h2>
+        <form id="searchForm" method="get" action="{% url 'IF_Main_selected' %}">
+            {% csrf_token %}
+            
+            <!-- User ID 입력 필드 -->
+            <label for="userId">User ID:</label>
+            <input type="text" id="userId" name="userId" placeholder="User ID 입력" class="form-control" required>
 
-<div class="container">
-    <h1>Warehouse Management</h1>
-    
-    <div class="button-group">
-        <!-- 입고 버튼 -->
-        <a href="#" class="button">입고 처리</a>
-        
-        <!-- 출고 버튼 -->
-        <a href="#" class="button">출고 처리</a>
+            <!-- 기간 선택 필드 -->
+            <label for="daterange">기간 선택:</label>
+            <input type="text" class="form-control" id="daterange" name="selected_date_range" placeholder="기간을 선택하세요" required>
+            
+            <!-- 입고/출고/모두 옵션 -->
+            <label>조회 옵션:</label>
+            <div>
+                <label><input type="radio" name="storage_retrieval" value="모두" checked> 모두</label>
+                <label><input type="radio" name="storage_retrieval" value="입고"> 입고</label>
+                <label><input type="radio" name="storage_retrieval" value="출고"> 출고</label>
+            </div>
+
+            <!-- 제출 버튼 -->
+            <button type="submit" class="btn btn-primary mt-2">조회</button>
+        </form>
     </div>
 
-    <div class="table-container">
-        <h2>재고 현황</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>상품 ID</th>
-                    <th>상품명</th>
-                    <th>수량</th>
-                    <th>위치</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- 여기에 향후 DB에서 불러온 재고 데이터를 삽입 -->
-                <tr>
-                    <td>001</td>
-                    <td>상품 A</td>
-                    <td>50</td>
-                    <td>창고 1</td>
-                </tr>
-                <tr>
-                    <td>002</td>
-                    <td>상품 B</td>
-                    <td>30</td>
-                    <td>창고 2</td>
-                </tr>
-                <!-- 향후 재고 데이터 추가 -->
-            </tbody>
-        </table>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+    <!-- Moment.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+
+    <!-- Date Range Picker JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-daterangepicker/3.0.5/daterangepicker.min.js"></script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Date Range Picker 초기화
+            $('#daterange').daterangepicker({
+                locale: {
+                    format: 'YYYY-MM-DD',
+                    separator: ' - '
+                },
+                autoApply: true,
+                opens: 'left'
+            });
+        });
+    </script>
+
+
+    <h1>입출고 로그</h1>
+        <p>사용자 ID: {{ user_id }}</p>
+        <p>조회 옵션: {{ storage_retrieval }}</p>
+
+        <!-- 로그 데이터 출력 -->
+        {% if logs %}
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>수량 변경</th>
+                        <th>날짜</th>
+                        <th>입출고 상태</th>
+                        <th>제품 바코드</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for log in logs %}
+                        <tr>
+                            <td>{{ log.id }}</td>
+                            <td>{{ log.change_quantity }}</td>
+                            <td>{{ log.date_time }}</td>
+                            <td>{{ log.storage_retrieval }}</td>
+                            <td>{{ log.productInfo_barcodeNum }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <p>조회 결과가 없습니다.</p>
+        {% endif %}
+
+    <div>
+        <a href="{% url 'run' %}" class="button">바코드 스캔하기</a>
     </div>
-</div>
 
 </body>
 </html>

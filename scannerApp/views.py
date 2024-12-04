@@ -105,7 +105,7 @@ def save_barcodes_to_db(request, barcode_data_list):
                 cnt = cursor.fetchone()[0]
 
                 if cnt == 0:
-                    cursor.execute("INSERT INTO scannerapp_product_info (barcode_num, barcode_structr) VALUES (%s, %s)", (data[0], data[1]))
+                    cursor.execute("INSERT INTO scannerapp_product_info (barcode_num, barcode_structure) VALUES (%s, %s)", (data[0], data[1]))
                     db.commit()
                 else:
                     # 바코드가 이미 존재하는 경우 제품 정보 렌더링
@@ -128,7 +128,7 @@ def render_product_info(request, barcode_num):
         cursor = db.cursor()
 
         # 특정 바코드 번호로 데이터 조회
-        cursor.execute("SELECT barcode_num, product_name, quantity, product_memo, barcode_structr FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
+        cursor.execute("SELECT barcode_num, product_name, quantity, product_memo, barcode_structure FROM scannerapp_product_info WHERE barcode_num = %s", (barcode_num,))
         value = cursor.fetchone()
 
         if value:
@@ -138,7 +138,7 @@ def render_product_info(request, barcode_num):
                 'product_name'    : value[1],
                 'quantity'        : value[2],
                 'product_memo'    : value[3],
-                'barcode_structr' : value[4]
+                'barcode_structure' : value[4]
             }
             context = {'product_info': product_info}
             return render(request, 'result.html', context)
