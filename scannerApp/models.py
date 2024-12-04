@@ -15,7 +15,7 @@ class product_info(models.Model):
 
     # 기타 필드
     product_memo = models.TextField(null=True, blank=True)
-    barcode_structr = models.CharField(max_length=100, default="EAN-13")
+    barcode_structure = models.CharField(max_length=100, default="EAN-13")
 
     #외래키 설정
     user_id = models.ForeignKey(
